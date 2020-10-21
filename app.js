@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 
-const adminData = require('./routes/admin')
+const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
+const errorController = require('./controllers/error')
 
 
 const app = express();
@@ -17,18 +18,10 @@ app.use('/', bodyParser.urlencoded({ extended: false }));
 //serve fila statically 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/admin', adminData.routes);
+app.use('/admin', adminRoutes.routes);
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-    res.status(404).render('404', {
-        title: "Page Not Found",
-        path: res.path,
-        productCss: false,
-        formsCss: false,
-        activeAddProd: false,
-        activeShop: false,
-    })
-});
+app.use(errorController.get404);
+
 
 app.listen(3000);

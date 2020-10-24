@@ -82,3 +82,17 @@ exports.getCheckout = (req, res, next) => {
     })
 
 }
+
+exports.postDeleteCartItem = (req, res, next) => {
+    const prodId = req.body.productId;
+    console.log(prodId);
+    Product.findById(prodId, product => {
+        console.log("product " + product);
+        console.log((product != null))
+        if (product != null) {
+            Cart.deleteProduct(prodId, product.price);
+
+        }
+        res.redirect('/cart');
+    });
+};

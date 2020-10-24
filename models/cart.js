@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { products } = require("../routes/admin");
 const p = path.join(path.dirname(
     process.mainModule.filename),
     'data',
@@ -17,9 +18,7 @@ module.exports = class Cart {
             }
 
             //analyze the cart => find existing  product
-            const existingProductIndex = cart.products.findIndex(
-                p => p.id === id
-            );
+
             const existingProduct = cart.products[existingProductIndex];
             let updatedProduct;
             //add new product
@@ -42,6 +41,24 @@ module.exports = class Cart {
     }
 
 
+    static deleteProduct(id, productPrice) {
+        fs.readFile(p, (err, fileContent) => {
+            if (err) {
+                return;
+            }
+            const updatedCart = { ...JSON.parse(fileContent) };
+            const product = updatedCart.products.find(prod => prod.id === id);
+            const productQty = product.qty;
+            updatedCart.products = updatedCart.products.filter(
+                prod => prod.id !== id
+            );
+            updatedCart.totalPrice =
+                updatedCart.totalPrice - productPrice * productQty;
 
+            fs.writeFile(p, JSON.stringify(updatedCart), err => {
+                console.log(err);
+            });
+        });
+    }
 
 };

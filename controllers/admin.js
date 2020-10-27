@@ -1,5 +1,4 @@
 const Product = require('../models/product');
-const { products } = require('../routes/admin');
 
 exports.getAddProduct = (req, res, next) => {
     res.render("./admin/edit-product", {
@@ -11,16 +10,17 @@ exports.getAddProduct = (req, res, next) => {
 }
 
 exports.postAddProduct = (req, res, next) => {
-    const product = new Product(
-        null, //id=null since we're gonna set a unique id in save()
-        req.body.title,
-        req.body.imageUrl,
-        req.body.price,
-        req.body.description
-    );
-    product.save()
+    Product.create(
+        {
+            title: req.body.title,
+            imageUrl: req.body.imageUrl,
+            price: req.body.price,
+            description: req.body.description
+        })
         .then(() => {
-            res.redirect('/');
+            (result) =>
+                //res.redirect('/');
+                console.log('created product')
         })
         .catch(err => console.log(err));
 }

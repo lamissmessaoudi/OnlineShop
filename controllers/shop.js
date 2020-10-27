@@ -32,26 +32,26 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
     const prodId = req.params.productId;
-    Product.findAll({ where: { id: prodId } })
-        .then((products) => {
-            res.render('shop/product-detail', {
-                title: 'Detail',
-                path: '/products',
-                product: products[0]
-            });
-        })
-        .catch(err => console.log(err));
-
-
-    // Product.findById(prodId)
-    //     .then((product) => {
+    // Product.findAll({ where: { id: prodId } })
+    //     .then((products) => {
     //         res.render('shop/product-detail', {
     //             title: 'Detail',
     //             path: '/products',
-    //             product: product
+    //             product: products[0]
     //         });
     //     })
     //     .catch(err => console.log(err));
+
+
+    Product.findByPk(prodId)
+        .then((product) => {
+            res.render('shop/product-detail', {
+                title: 'Detail',
+                path: '/products',
+                product: product
+            });
+        })
+        .catch(err => console.log(err));
 }
 
 exports.getCart = (req, res, next) => {
